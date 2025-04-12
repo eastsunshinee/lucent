@@ -1,0 +1,71 @@
+# macOS
+.DS_Store
+
+# Xcode
+DerivedData/
+build/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcuserstate
+*.preview-thumbnails
+*.preview-provider
+
+# User data
+xcuserdata/
+
+# Swift Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# SwiftPM
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+Package.pins
+
+# Xcode project/workspace
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+
+# CocoaPods (optional)
+Pods/
+
+# Carthage (optional)
+Carthage/Build/
+
+# Accio
+Dependencies/
+.accio/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code Injection (e.g. johnno1962)
+iOSInjectionProject/
+
+# Coverage / profiling
+*.gcno
+*.xccovreport
+*.xcresult
+
+# Editor
+*.swp
+*.swo
