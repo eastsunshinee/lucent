@@ -8,5 +8,5 @@
 import Foundation
 
 protocol SaveFocusSessionUseCase {
-    func excute(session: FocusSession) async throws// 비동기 저장 가능성 대비, ex: 파일, 클라우드 등
+    func execute(session: FocusSession) async throws// 비동기 저장 가능성 대비, ex: 파일, 클라우드 등
 }
