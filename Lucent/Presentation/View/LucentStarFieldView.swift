@@ -6,64 +6,58 @@
 //
 import SwiftUI
 
-struct LucentStar: Identifiable {
-    let id = UUID()
-    let emotion: Mood
-    let position: CGPoint
-    let size: CGFloat
-}
-
 struct LucentStarFieldView: View {
-    let stars: [LucentStar]
+    @ObservedObject var viewModel: LucentStarFieldViewModel
 
     var body: some View {
-        ZStack {
-            // 현대적이고 감성적인 그라디언트 + Glow 덩어리
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(hex: "#090E22"),
-                    Color(hex: "#1F2232")
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+        GeometryReader { geo in
+            ZStack {
+                // 배경: 감성적 은하수 느낌
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(hex: "#090E22"),
+                        Color(hex: "#1F2232")
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
 
-            // 흐릿한 glow layer
-            Circle()
-                .fill(Color.white.opacity(0.04))
-                .frame(width: 800, height: 800)
-                .blur(radius: 100)
-                .offset(x: 150, y: 500)
-
-            // 별들
-            ForEach(stars) { star in
+                // 은은한 glow circle (배경 보조)
                 Circle()
-                    .fill(star.emotion.color)
-                    .frame(width: star.size)
-                    .blur(radius: 0.5)
-                    .overlay(
-                        Circle()
-                            .stroke(star.emotion.color.opacity(0.6), lineWidth: 0.5)
-                            .blur(radius: 2)
-                    )
-                    .shadow(color: star.emotion.color.opacity(0.3), radius: 8)
-                    .position(star.position)
+                    .fill(Color.white.opacity(0.03))
+                    .frame(width: 800, height: 800)
+                    .blur(radius: 100)
+                    .offset(x: 100, y: 500)
+
+                // 감정별 별들 시각화
+                ForEach(viewModel.stars) { star in
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                gradient: Gradient(colors: [
+                                    star.emotion.color.opacity(0.95),
+                                    star.emotion.color.opacity(0.05)
+                                ]),
+                                center: .center,
+                                startRadius: 0,
+                                endRadius: star.size * 0.8
+                            )
+                        )
+                        .frame(width: star.size, height: star.size)
+                        .position(star.position)
+                        .shadow(color: star.emotion.color.opacity(0.3), radius: 6)
+                }
+            }
+            .onAppear {
+                viewModel.loadStars(in: geo.size)
             }
         }
     }
 }
 
 #Preview {
-    let sampleStars = (0..<40).map { _ in
-        LucentStar(
-            emotion: Mood.allCases.randomElement()!,
-            position: CGPoint(
-                x: CGFloat.random(in: 20...350),
-                y: CGFloat.random(in: 20...700)
-            ),
-            size: CGFloat.random(in: 10...20)
-        )
-    }
-    return LucentStarFieldView(stars: sampleStars)
+    let repository = LocalFocusSessionRepository()
+    let vm = LucentStarFieldViewModel(repository: repository)
+    return LucentStarFieldView(viewModel: vm)
 }
