@@ -6,13 +6,6 @@
 //
 import SwiftUI
 
-struct LucentStar: Identifiable {
-    let id = UUID()
-    let emotion: Mood
-    let position: CGPoint
-    let size: CGFloat
-}
-
 struct LucentStarFieldView: View {
     let stars: [LucentStar]
 
