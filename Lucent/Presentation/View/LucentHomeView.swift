@@ -28,7 +28,6 @@ struct LucentHomeView: View {
     }
 }
 
-
 #Preview {
     LucentHomeView()
 }
