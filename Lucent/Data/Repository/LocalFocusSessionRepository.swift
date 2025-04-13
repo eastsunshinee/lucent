@@ -17,7 +17,7 @@ final class LocalFocusSessionRepository: FocusSessionRepository {
         UserDefaults.standard.set(data, forKey: key)
     }
 
-    private func loadAll() async throws -> [FocusSession] {
+    func loadAll() async throws -> [FocusSession] {
         guard let data = UserDefaults.standard.data(forKey: key) else {
             return []
         }
