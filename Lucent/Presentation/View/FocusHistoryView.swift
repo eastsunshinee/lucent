@@ -37,7 +37,7 @@ struct FocusHistoryView: View {
                 }
                 .padding(.vertical, 6)
             }
-            .navigationTitle("집중 기록")
+            .navigationTitle("기록")
         }
         .onAppear {
             viewModel.loadSessions()
