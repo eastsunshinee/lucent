@@ -9,5 +9,5 @@ import Foundation
 
 protocol FocusSessionRepository {
     func save(session: FocusSession) async throws
-
+    func loadAll() async throws -> [FocusSession]
 }
