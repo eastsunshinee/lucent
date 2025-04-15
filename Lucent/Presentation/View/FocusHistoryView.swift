@@ -16,26 +16,33 @@ struct FocusHistoryView: View {
 
     var body: some View {
         NavigationView {
-            List(viewModel.sessions) { session in
-                HStack(alignment: .top, spacing: 12) {
-                    Circle()
-                        .fill(session.mood?.color ?? .gray)
-                        .frame(width: 14, height: 14)
+            List {
+                ForEach(viewModel.sessions) { session in
+                    HStack(alignment: .top, spacing: 12) {
+                        Circle()
+                            .fill(session.mood?.color ?? .gray)
+                            .frame(width: 14, height: 14)
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(session.mood?.label ?? "무감정")
-                            .font(.headline)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(session.mood?.label ?? "무감정")
+                                .font(.headline)
 
-                        Text(session.note ?? "기록 없음")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            Text(session.note ?? "기록 없음")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
 
-                        Text(session.startTime.formatted(date: .abbreviated, time: .shortened))
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                            Text(session.startTime.formatted(date: .abbreviated, time: .shortened))
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .padding(.vertical, 6)
+                }
+                .onDelete { indexSet in
+                    indexSet.map { viewModel.sessions[$0] }.forEach {
+                        viewModel.deleteSession($0)
                     }
                 }
-                .padding(.vertical, 6)
             }
             .navigationTitle("기록")
         }
@@ -48,6 +55,7 @@ struct FocusHistoryView: View {
 #Preview {
     let repository = LocalFocusSessionRepository()
     let useCase = LoadFocusSessionsUseCaseImpl(repository: repository)
-    let viewModel = FocusHistoryViewModel(loadUseCase: useCase)
+    let deleteUseCase = DeleteFocusSessionsUseCaseImpl(repository: repository)
+    let viewModel = FocusHistoryViewModel(loadUseCase: useCase, deleteUseCase: deleteUseCase)
     FocusHistoryView(viewModel: viewModel)
 }
