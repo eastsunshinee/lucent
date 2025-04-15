@@ -11,16 +11,16 @@ import Combine
 final class FocusHistoryViewModel: ObservableObject {
     @Published private(set) var sessions: [FocusSession] = []
 
-    private let repository: FocusSessionRepository
+    private let loadUseCase: LoadFocusSessionsUseCase
 
-    init(repository: FocusSessionRepository) {
-        self.repository = repository
+    init(loadUseCase: LoadFocusSessionsUseCase) {
+        self.loadUseCase = loadUseCase
     }
 
     func loadSessions() {
         Task {
             do {
-                let loaded = try await repository.loadAll()
+                let loaded = try await loadUseCase.excute()
                 DispatchQueue.main.async {
                     self.sessions = loaded.sorted(by: { $0.startTime > $1.startTime })
                 }
@@ -29,4 +29,5 @@ final class FocusHistoryViewModel: ObservableObject {
             }
         }
     }
+
 }

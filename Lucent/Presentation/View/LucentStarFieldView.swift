@@ -58,6 +58,7 @@ struct LucentStarFieldView: View {
 
 #Preview {
     let repository = LocalFocusSessionRepository()
-    let vm = LucentStarFieldViewModel(repository: repository)
-    return LucentStarFieldView(viewModel: vm)
+    let loadUseCase = LoadFocusSessionsUseCaseImpl(repository: repository)
+    let vm = LucentStarFieldViewModel(loadUseCase: loadUseCase)
+    LucentStarFieldView(viewModel: vm)
 }
