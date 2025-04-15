@@ -8,5 +8,5 @@
 import Foundation
 
 protocol LoadFocusSessionsUseCase {
-    func excute() async throws -> [FocusSession]
+    func execute() async throws -> [FocusSession]
 }

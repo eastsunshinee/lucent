@@ -20,7 +20,7 @@ final class LucentStarFieldViewModel: ObservableObject {
     func loadStars(in size: CGSize) {
         Task {
             do {
-                let sessions = try await loadUseCase.excute()
+                let sessions = try await loadUseCase.execute()
 
                 let mapped = sessions.map { session in
                     LucentStar(
