@@ -9,40 +9,53 @@ import SwiftUI
 
 struct FocusTimerView: View {
     @ObservedObject var viewModel: FocusTimerViewModel
+    @State private var animateBreath = false
 
     var body: some View {
-        VStack(spacing: 32) {
-            Text(timeFormatted(viewModel.timeRemaining))
-                .font(.system(size: 48, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
-                .padding(.top, 40)
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [Color.black, Color(hex: "#0C0F2E")]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
 
-            // 감정 선택 (Mood Picker)
-            MoodPickerView(selected: $viewModel.selectedMood)
+            VStack(spacing: 32) {
+                Text(timeFormatted(viewModel.timeRemaining))
+                    .font(.system(size: 56, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .scaleEffect(animateBreath ? 1.03 : 1.0)
+                    .animation(.easeInOut(duration: 2).repeatForever(autoreverses: true), value: animateBreath)
 
-            // 메모 입력
-            TextField("오늘의 한 줄 회고를 남겨보세요", text: $viewModel.note)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                MoodPickerView(selected: $viewModel.selectedMood)
+
+                TextField("오늘의 감정을 한 줄로 남겨보세요", text: $viewModel.note)
+                    .padding()
+                    .background(Color.white.opacity(0.07))
+                    .cornerRadius(12)
+                    .foregroundColor(.white)
+                    .padding(.horizontal)
+
+                Button(action: {
+                    viewModel.isRunning ? viewModel.stopTimer() : viewModel.startTimer()
+                }) {
+                    Text(viewModel.isRunning ? "중단하기" : "집중 시작")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(viewModel.isRunning ? Color.red : Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                }
                 .padding(.horizontal)
 
-            // 시작 / 중단 버튼
-            Button(action: {
-                viewModel.isRunning ? viewModel.stopTimer() : viewModel.startTimer()
-            }) {
-                Text(viewModel.isRunning ? "중단하기" : "집중 시작")
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(viewModel.isRunning ? Color.red : Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
+                Spacer()
             }
-            .padding(.horizontal)
-
-            Spacer()
+            .padding()
         }
-        .padding()
-        .background(Color.black.edgesIgnoringSafeArea(.all))
+        .onAppear {
+            animateBreath = true
+        }
     }
 }
 

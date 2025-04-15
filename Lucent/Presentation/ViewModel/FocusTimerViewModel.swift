@@ -52,7 +52,11 @@ final class FocusTimerViewModel: ObservableObject {
     func stopTimer() {
         timer?.cancel()
         isRunning = false
-        timeRemaining = sessionLength
+        if timeRemaining < sessionLength {
+            completeSession()
+        } else {
+            timeRemaining = sessionLength
+        }
     }
 
     func completeSession() {
