@@ -20,7 +20,7 @@ final class FocusHistoryViewModel: ObservableObject {
     func loadSessions() {
         Task {
             do {
-                let loaded = try await loadUseCase.excute()
+                let loaded = try await loadUseCase.execute()
                 DispatchQueue.main.async {
                     self.sessions = loaded.sorted(by: { $0.startTime > $1.startTime })
                 }

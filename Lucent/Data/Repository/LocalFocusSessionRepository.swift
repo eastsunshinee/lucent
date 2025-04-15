@@ -24,4 +24,11 @@ final class LocalFocusSessionRepository: FocusSessionRepository {
         let sessions = try JSONDecoder().decode([FocusSession].self, from: data)
         return sessions
     }
+
+    func delete(session: FocusSession) async throws {
+        var sessions = try await loadAll()
+        sessions.removeAll { $0.id == session.id }
+        let data = try JSONEncoder().encode(sessions)
+        UserDefaults.standard.set(data, forKey: key)
+    }
 }
