@@ -10,7 +10,8 @@ import SwiftUI
 struct StarFieldTab: View {
     var body: some View {
         let repository = LocalFocusSessionRepository()
-        let viewModel = LucentStarFieldViewModel(repository: repository)
+        let useCase = LoadFocusSessionsUseCaseImpl(repository: repository)
+        let viewModel = LucentStarFieldViewModel(loadUseCase: useCase)
         LucentStarFieldView(viewModel: viewModel)
     }
 }
