@@ -10,7 +10,9 @@ import SwiftUI
 struct FocusHistoryTab: View {
     var body: some View {
         let repository = LocalFocusSessionRepository()
-        FocusHistoryView(repository: repository)
+        let useCase = LoadFocusSessionsUseCaseImpl(repository: repository)
+        let viewModel = FocusHistoryViewModel(loadUseCase: useCase)
+        FocusHistoryView(viewModel: viewModel)
     }
 }
 

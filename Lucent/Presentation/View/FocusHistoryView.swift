@@ -10,8 +10,8 @@ import SwiftUI
 struct FocusHistoryView: View {
     @StateObject private var viewModel: FocusHistoryViewModel
 
-    init(repository: FocusSessionRepository) {
-        _viewModel = StateObject(wrappedValue: FocusHistoryViewModel(repository: repository))
+    init(viewModel: FocusHistoryViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
@@ -47,6 +47,7 @@ struct FocusHistoryView: View {
 
 #Preview {
     let repository = LocalFocusSessionRepository()
-    return FocusHistoryView(repository: repository)
+    let useCase = LoadFocusSessionsUseCaseImpl(repository: repository)
+    let viewModel = FocusHistoryViewModel(loadUseCase: useCase)
+    FocusHistoryView(viewModel: viewModel)
 }
-
