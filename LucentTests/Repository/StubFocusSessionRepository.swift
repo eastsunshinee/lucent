@@ -5,10 +5,11 @@
 //  Created by 김동현 on 4/16/25.
 //
 
-import XCTest
+import Foundation
+
 @testable import Lucent
 
-final class StubFocusSessionRepository: XCTestCase {
+final class StubFocusSessionRepository: FocusSessionRepository {
     var saved: [FocusSession] = []
     var shouldFail = false
 

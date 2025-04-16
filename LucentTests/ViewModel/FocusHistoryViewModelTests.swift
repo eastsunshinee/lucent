@@ -9,28 +9,51 @@ import XCTest
 @testable import Lucent
 
 final class FocusHistoryViewModelTests: XCTestCase {
+    private var stubRepository: StubFocusSessionRepository!
+    private var loadUseCase: LoadFocusSessionsUseCase!
+    private var deleteUseCase: DeleteFocusSessionUseCase!
+    private var viewModel: FocusHistoryViewModel!
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    override func setUp() {
+        stubRepository = StubFocusSessionRepository()
+        loadUseCase = LoadFocusSessionsUseCaseImpl(repository: stubRepository)
+        deleteUseCase = DeleteFocusSessionsUseCaseImpl(repository: stubRepository)
+        viewModel = FocusHistoryViewModel(loadUseCase: loadUseCase, deleteUseCase: deleteUseCase)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    override func tearDown() {
+        stubRepository = nil
+        loadUseCase = nil
+        deleteUseCase = nil
+        viewModel = nil
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testLoadSessions_shouldSortByDescendingStartTime() async throws {
+        let now = Date()
+        let session1 = FocusSession(startTime: now, endTime: now, mood: .calm, note: "최근")
+        let session2 = FocusSession(startTime: now.addingTimeInterval(-1000), endTime: now, mood: .tired, note: "이전")
+
+        stubRepository.saved = [session2, session1]
+
+        viewModel.loadSessions()
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(viewModel.sessions.count, 2)
+        XCTAssertEqual(viewModel.sessions.first?.note, "최근")
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
+    func testDeleteSession_shouldRemoveFromSessionsAndRepository() async {
+        // Given
+        let session = FocusSession(startTime: .now, endTime: .now, mood: .joyful, note: "삭제 대상")
+        stubRepository.saved = [session]
+        viewModel.loadSessions()
 
+        // When
+        viewModel.deleteSession(session)
+        try? await Task.sleep(nanoseconds: 100_000_000) // async 반영 대기
+
+        // Then
+        XCTAssertTrue(viewModel.sessions.isEmpty)
+        XCTAssertTrue(stubRepository.saved.isEmpty)
+    }
 }
