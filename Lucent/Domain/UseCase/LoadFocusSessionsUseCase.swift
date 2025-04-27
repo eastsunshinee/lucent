@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import Combine
 
 protocol LoadFocusSessionsUseCase {
     func execute() async throws -> [FocusSession]
+    func excutePublisher() -> AnyPublisher<[FocusSession], Error>
 }
