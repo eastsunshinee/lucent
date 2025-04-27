@@ -19,7 +19,7 @@ final class LoadFocusSessionsUseCaseImpl: LoadFocusSessionsUseCase {
         return try await repository.loadAll()
     }
 
-    func excutePublisher() -> AnyPublisher<[FocusSession], any Error> {
+    func executePublisher() -> AnyPublisher<[FocusSession], any Error> {
         Future { promise in
             Task {
                 do {

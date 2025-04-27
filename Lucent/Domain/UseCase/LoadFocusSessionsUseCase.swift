@@ -10,5 +10,5 @@ import Combine
 
 protocol LoadFocusSessionsUseCase {
     func execute() async throws -> [FocusSession]
-    func excutePublisher() -> AnyPublisher<[FocusSession], Error>
+    func executePublisher() -> AnyPublisher<[FocusSession], Error>
 }
