@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class DeleteFocusSessionsUseCaseImpl: DeleteFocusSessionUseCase {
     private let repository: FocusSessionRepository
@@ -17,4 +18,19 @@ final class DeleteFocusSessionsUseCaseImpl: DeleteFocusSessionUseCase {
     func execute(session: FocusSession) async throws {
         try await repository.delete(session: session)
     }
+
+    func executePublisher(session: FocusSession) -> AnyPublisher<Void, Error> {
+        Future { promise in
+            Task {
+                do {
+                    try await self.repository.delete(session: session)
+                    promise(.success(()))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
 }
