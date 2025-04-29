@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import Combine
 
 protocol DeleteFocusSessionUseCase {
     func execute(session: FocusSession) async throws
+    func executePublisher(session: FocusSession) -> AnyPublisher<Void, Error>
 }
